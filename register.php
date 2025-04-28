@@ -159,8 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 <label for="account_type">Account Type:</label>
                 <select id="account_type" name="account_type" required>
                     <option value="rentee">Rentee</option>
-                    <option value="renters">Renters</option>
-                    <option value="guest">Guest</option>
+                    <option value="renters">Renter</option>
                     <option value="admin">Admin</option>
                 </select>
                 <br>

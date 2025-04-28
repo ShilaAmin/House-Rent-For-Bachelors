@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email = '$email' LIMIT 1";
+    $query = "SELECT * FROM user WHERE email = '$email' LIMIT 1";
     $result = mysqli_query($conn, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {

@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch the account type of the logged-in user
 $userID = $_SESSION['user_id'];
-$sql = "SELECT account_type FROM users WHERE userID = ?";
+$sql = "SELECT account_type FROM user WHERE userID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $userID);
 $stmt->execute();

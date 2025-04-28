@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="register.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form action="../register.php" method="POST" enctype="multipart/form-data"> <!-- Updated action -->
+            <label for="userID">User ID:</label>
+            <input type="text" id="userID" name="userID" required>
+            <br>
+            <label for="phone_no">Phone Number:</label>
+            <input type="text" id="phone_no" name="phone_no" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <br>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+            <br>
+            <label for="picture">Picture:</label>
+            <input type="file" id="picture" name="picture" accept="image/*" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <label for="nid">NID:</label>
+            <input type="text" id="nid" name="nid" required>
+            <br>
+            <label for="account_type">Account Type:</label>
+            <select id="account_type" name="account_type" required>
+                <option value="rentee">Rentee</option>
+                <option value="renters">Renters</option>
+                <option value="guest">Guest</option>
+                <option value="admin">Admin</option>
+            </select>
+            <br>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+</html>

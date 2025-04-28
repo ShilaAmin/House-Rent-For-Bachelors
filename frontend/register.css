@@ -1,0 +1,60 @@
+/* Reset some default browser styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure the height is 100% */
+    overflow: auto; /* Allow scrolling */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align the form at the top */
+    min-height: 100vh; /* Allow scrolling if content exceeds viewport height */
+    margin: 0;
+    padding: 20px; /* Add padding to prevent the form from touching the edges */
+}
+
+.form-container {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin-top: 20px; /* Add some space at the top */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #003b8b;
+}

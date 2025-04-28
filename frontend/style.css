@@ -1,0 +1,154 @@
+body {
+    font-family: 'Fredoka', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background-color: #004aad;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .nav_logo h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+header ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+header ul li {
+    display: inline-block;
+}
+
+header ul li a {
+    color: white; /* Set the text color to white */
+    text-decoration: none; /* Remove underline */
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+header ul li a:hover {
+    background-color: #003b8b; /* Add hover effect */
+    color: white;
+}
+
+/* Welcome Section */
+.welcome {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #e6f2ff;
+}
+
+.welcome h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.welcome p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.welcome .dropbtn1 {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.welcome .dropbtn1:hover {
+    background-color: #003b8b;
+}
+
+/* Featured Properties Section */
+.featured_properties {
+    padding: 50px 20px;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.featured_properties h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.properties_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Property Card Styling */
+.property_card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.property_card img.property_image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.property_card h3 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.property_card p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.property_card .dropbtn1 {
+    font-size: 1rem;
+    padding: 10px 15px;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.property_card .dropbtn1:hover {
+    background-color: #003b8b;
+}
+
+.property_details img.property_image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+footer {
+    background-color: #004aad;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 50px;
+}

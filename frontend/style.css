@@ -6,43 +6,43 @@ body {
     color: #333;
 }
 
+/* Navigation Bar */
 header {
-    background-color: #004aad;
-    color: white;
-    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 20px 10%;
+    background-color: #004aad;
+    color: white;
 }
 
 header .nav_logo h1 a {
     color: white;
     text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
 header ul {
     list-style: none;
     display: flex;
-    gap: 15px;
-    margin: 0;
-    padding: 0;
+    gap: 20px;
 }
 
 header ul li {
-    display: inline-block;
+    display: inline;
 }
 
 header ul li a {
-    color: white; /* Set the text color to white */
-    text-decoration: none; /* Remove underline */
+    color: white;
+    text-decoration: none;
     font-size: 1rem;
-    padding: 10px 15px;
-    border-radius: 5px;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 header ul li a:hover {
-    background-color: #003b8b; /* Add hover effect */
-    color: white;
+    color: #ffcc00;
 }
 
 /* Welcome Section */

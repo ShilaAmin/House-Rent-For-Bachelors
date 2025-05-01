@@ -2,28 +2,31 @@
 session_start();
 
 // Check if the admin is logged in
-if (!isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'admin') {
     header("Location: login.php"); // Redirect to login page if not logged in
     exit();
 }
 
-require_once('DBconnect.php');
+require_once 'DBconnect.php';
 
 // Check if the userID is provided in the query string
 if (isset($_GET['userID'])) {
-    $userID = mysqli_real_escape_string($conn, $_GET['userID']);
+    $userID = $_GET['userID'];
 
-    // Delete the user from the database
-    $sql_delete_user = "DELETE FROM user WHERE userID = '$userID'";
-    $result_delete_user = mysqli_query($conn, $sql_delete_user);
+    // Delete the user from the database using prepared statement
+    $sql = "DELETE FROM user WHERE userID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $userID);
 
-    if (mysqli_affected_rows($conn) > 0) {
-        echo "<script>alert('User deleted successfully.'); window.location.href='admin_dashboard.php';</script>";
+    if ($stmt->execute()) {
+        echo "User deleted successfully.";
     } else {
-        echo "<script>alert('Error deleting user: " . mysqli_error($conn) . "'); window.location.href='admin_dashboard.php';</script>";
+        echo "Error deleting user: " . $conn->error;
     }
-} else {
-    echo "<script>alert('No user ID provided.'); window.location.href='admin_dashboard.php';</script>";
+
+    $stmt->close();
+    header("Location: admin_dashboard.php");
+    exit();
 }
 
 mysqli_close($conn);

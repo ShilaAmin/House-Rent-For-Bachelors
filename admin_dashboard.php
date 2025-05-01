@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
+if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'Admin') {
+    header("Location: login.php");
     exit();
 }
 
@@ -49,6 +49,9 @@ $result_properties = mysqli_query($conn, $sql_properties);
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Gender</th>
+                            <th>Location</th>
+                            <th>Verified</th>
                             <th>Account Type</th>
                             <th>Action</th>
                         </tr>
@@ -62,12 +65,15 @@ $result_properties = mysqli_query($conn, $sql_properties);
                                 echo "<td>" . $row['name'] . "</td>";
                                 echo "<td>" . $row['email'] . "</td>";
                                 echo "<td>" . $row['phone_no'] . "</td>";
+                                echo "<td>" . $row['gender'] . "</td>";
+                                echo "<td>" . $row['location'] . "</td>";
+                                echo "<td>" . ($row['verified'] ? 'Yes' : 'No') . "</td>";
                                 echo "<td>" . $row['account_type'] . "</td>";
                                 echo "<td><a href='admin_delete_user.php?userID=" . $row['userID'] . "' onclick=\"return confirm('Are you sure you want to delete this user?');\">Delete</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='6'>No users found.</td></tr>";
+                            echo "<tr><td colspan='9'>No users found.</td></tr>";
                         }
                         ?>
                     </tbody>

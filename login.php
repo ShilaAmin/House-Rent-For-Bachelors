@@ -5,16 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    // Hardcoded admin credentials
-    if ($username === "admin_master" && $password === "1234") {
-        session_start();
-        $_SESSION["user"] = $username;
-        $_SESSION["account_type"] = "admin";
-        $_SESSION["admin_logged_in"] = true;
-        header("Location: admin_dashboard.php");
-        exit();
-    }
-
     // Check if the user exists in the database
     $sql = "SELECT * FROM user WHERE userID = ?";
     $stmt = $conn->prepare($sql);
@@ -32,12 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $_SESSION["account_type"] = $user["account_type"];
 
             // Redirect based on account type
-            if ($user["account_type"] == "rentee") {
+            if ($user["account_type"] == "Rentee") {
                 header("Location: rentee_dashboard.php");
-            } else if ($user["account_type"] == "renter") {
+            } else if ($user["account_type"] == "Renter") {
                 header("Location: renter_dashboard.php");
-            } else if ($user["account_type"] == "admin") {
-                $_SESSION["admin_logged_in"] = true;
+            } else if ($user["account_type"] == "Admin") {
                 header("Location: admin_dashboard.php");
             }
             exit();

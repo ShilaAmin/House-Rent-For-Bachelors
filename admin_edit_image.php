@@ -1,94 +1,99 @@
 <?php
 session_start();
-
-// Check if the admin is logged in
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
+if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'admin') {
+    header("Location: login.php");
     exit();
 }
 
-require_once "DBconnect.php";
+require_once 'DBconnect.php';
 
-// Validate query parameters
-if (!isset($_GET['propertyID'])) {
-    echo "<script>alert('Invalid request. No property ID provided.'); window.location.href='admin_dashboard.php';</script>";
-    exit();
+if (isset($_GET['propertyID'])) {
+    $propertyID = $_GET['propertyID'];
+
+    // Fetch the current image for the property
+    $sql = "SELECT photos FROM property WHERE propertyID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $propertyID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $currentImage = $row['photos'];
+    } else {
+        echo "Property not found.";
+        exit();
+    }
+    $stmt->close();
 }
 
-$propertyID = mysqli_real_escape_string($conn, $_GET['propertyID']);
+// Handle the form submission for updating the image
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
+    if (isset($_FILES['new_image']) && $_FILES['new_image']['error'] === UPLOAD_ERR_OK) {
+        $newImageName = $_FILES['new_image']['name'];
+        $targetDir = "uploads/";
+        $targetFile = $targetDir . basename($newImageName);
 
-// Fetch property details
-$sql_property = "SELECT * FROM property WHERE propertyID = '$propertyID'";
-$result_property = mysqli_query($conn, $sql_property);
-$property = mysqli_fetch_assoc($result_property);
+        // Move the uploaded file to the uploads directory
+        if (move_uploaded_file($_FILES['new_image']['tmp_name'], $targetFile)) {
+            // Delete the old image file if it exists
+            if (!empty($currentImage) && file_exists($targetDir . $currentImage)) {
+                unlink($targetDir . $currentImage);
+            }
 
-if (!$property) {
-    echo "<script>alert('Property not found.'); window.location.href='admin_dashboard.php';</script>";
-    exit();
+            // Update the database with the new image name
+            $sql_update_image = "UPDATE property SET photos = ? WHERE propertyID = ?";
+            $stmt_update = $conn->prepare($sql_update_image);
+            $stmt_update->bind_param("si", $newImageName, $propertyID);
+
+            if ($stmt_update->execute()) {
+                echo "Image updated successfully.";
+                header("Location: admin_dashboard.php");
+                exit();
+            } else {
+                echo "Error updating image: " . $conn->error;
+            }
+            $stmt_update->close();
+        } else {
+            echo "Error uploading the new image.";
+        }
+    } else {
+        echo "Please select a valid image file.";
+    }
 }
-
-// Fetch images for the property
-$sql_images = "SELECT * FROM property_images WHERE propertyID = '$propertyID'";
-$result_images = mysqli_query($conn, $sql_images);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="frontend/style.css" />
-    <title>Edit Property Images</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="frontend/style.css"> <!-- Link to your CSS file -->
+    <title>Edit Property Image</title>
 </head>
 <body>
     <header>
         <nav>
             <div class="nav_logo">
-                <h1><a href="admin_dashboard.php">Admin Dashboard</a></h1>
+                <h1>Edit Property Image</h1>
             </div>
-            <ul class="nav_link">
-                <li><a href="admin_dashboard.php">Home</a></li>
-            </ul>
         </nav>
     </header>
     <main>
-        <section class="property-images">
-            <div class="property-images_box">
-                <h1>Images for <?php echo $property['title']; ?></h1>
-                <table class="property-images_table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (mysqli_num_rows($result_images) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_images)) {
-                                $image_path = $row["image_path"];
-                        ?>
-                        <tr>
-                            <td>
-                                <?php if (!empty($image_path)) { ?>
-                                    <img src="<?php echo $image_path; ?>" alt="Property Image" width="150" height="100" />
-                                <?php } else { ?>
-                                    <p>Image not found</p>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                <a href="admin_delete_image.php?propertyID=<?php echo $propertyID; ?>&image=<?php echo $image_path; ?>" onclick="return confirm('Are you sure you want to delete this image?');">Delete</a>
-                            </td>
-                        </tr>
-                        <?php
-                            }
-                        } else {
-                            echo "<tr><td colspan='2'>No images found.</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+        <section class="edit_image_section">
+            <h2>Edit Image for Property ID: <?php echo htmlspecialchars($propertyID); ?></h2>
+            <?php if (!empty($currentImage)): ?>
+                <p>Current Image:</p>
+                <img src="uploads/<?php echo htmlspecialchars($currentImage); ?>" alt="Current Property Image" width="200">
+            <?php else: ?>
+                <p>No image currently available for this property.</p>
+            <?php endif; ?>
+            <form action="admin_edit_image.php?propertyID=<?php echo htmlspecialchars($propertyID); ?>" method="POST" enctype="multipart/form-data">
+                <label for="new_image">Select New Image:</label>
+                <input type="file" id="new_image" name="new_image" accept="image/*" required>
+                <br><br>
+                <button type="submit" name="update_image">Update Image</button>
+            </form>
         </section>
     </main>
 </body>

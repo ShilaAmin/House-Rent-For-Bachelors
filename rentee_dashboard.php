@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in and is a rentee
-if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'rentee') {
+if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'Rentee') {
     header("Location: login.php"); // Redirect to login page if not logged in or not a rentee
     exit();
 }
@@ -10,8 +10,34 @@ if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'rentee') {
 require_once 'DBconnect.php'; // Include database connection
 
 // Fetch properties available for rent
-$sql = "SELECT * FROM property WHERE status = 'available'";
+$sql = "SELECT * FROM property WHERE remaining > 0";
 $result = mysqli_query($conn, $sql);
+
+// Handle booking
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
+    $propertyID = $_POST['propertyID'];
+
+    // Check if slots are available
+    $check_slots_sql = "SELECT remaining FROM property WHERE propertyID = ?";
+    $stmt = $conn->prepare($check_slots_sql);
+    $stmt->bind_param("i", $propertyID);
+    $stmt->execute();
+    $result_slots = $stmt->get_result();
+    $property = $result_slots->fetch_assoc();
+
+    if ($property['remaining'] > 0) {
+        // Decrease the remaining slot count by 1
+        $update_slots_sql = "UPDATE property SET remaining = remaining - 1 WHERE propertyID = ?";
+        $stmt_update = $conn->prepare($update_slots_sql);
+        $stmt_update->bind_param("i", $propertyID);
+        $stmt_update->execute();
+
+        // Add booking record (optional: create a `bookings` table to track bookings)
+        echo "<script>alert('Booking successful!');</script>";
+    } else {
+        echo "<script>alert('No slots available for this property.');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +63,7 @@ $result = mysqli_query($conn, $sql);
     <main>
         <section class="welcome">
             <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h2>
-            <p>Here are the properties available for rent:</p>
+            <p>Browse available properties below:</p>
         </section>
 
         <section class="properties">
@@ -48,8 +74,17 @@ $result = mysqli_query($conn, $sql);
                             <img src="uploads/<?php echo htmlspecialchars($property['photos']); ?>" alt="Property Image" class="property_image">
                             <h3><?php echo htmlspecialchars($property['title']); ?></h3>
                             <p>Location: <?php echo htmlspecialchars($property['location']); ?></p>
+                            <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price']); ?></p>
-                            <a href="view_property.php?id=<?php echo $property['propertyID']; ?>"><button class="dropbtn1">View Details</button></a>
+                            <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <form method="POST" action="rentee_dashboard.php">
+                                <input type="hidden" name="propertyID" value="<?php echo $property['propertyID']; ?>">
+                                <?php if ($property['remaining'] > 0): ?>
+                                    <button type="submit" name="book_property" class="dropbtn1">Book Now</button>
+                                <?php else: ?>
+                                    <button type="button" class="dropbtn1" disabled>No Slots Available</button>
+                                <?php endif; ?>
+                            </form>
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>

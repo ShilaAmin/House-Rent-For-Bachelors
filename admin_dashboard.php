@@ -21,7 +21,7 @@ $result_properties = mysqli_query($conn, $sql_properties);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="frontend/style.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="frontend/admin_dashboad.css"> <!-- Link to the Admin Dashboard CSS -->
     <title>Admin Dashboard</title>
 </head>
 <body>
@@ -38,7 +38,7 @@ $result_properties = mysqli_query($conn, $sql_properties);
     <main>
         <section class="admin_section">
             <div class="admin_box">
-                <h1>Admin Dashboard</h1>
+            
 
                 <!-- Manage Users -->
                 <h2>Manage Users</h2>
@@ -88,6 +88,8 @@ $result_properties = mysqli_query($conn, $sql_properties);
                             <th>Title</th>
                             <th>Location</th>
                             <th>Price</th>
+                            <th>Remaining Slots</th>
+                            <th>Capacity</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -100,11 +102,13 @@ $result_properties = mysqli_query($conn, $sql_properties);
                                 echo "<td>" . $row['title'] . "</td>";
                                 echo "<td>" . $row['location'] . "</td>";
                                 echo "<td>" . $row['price'] . "</td>";
+                                echo "<td>" . $row['remaining'] . "</td>";
+                                echo "<td>" . $row['capacity'] . "</td>";
                                 echo "<td><a href='admin_delete_property.php?propertyID=" . $row['propertyID'] . "' onclick=\"return confirm('Are you sure you want to delete this property?');\">Delete</a></td>";
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No properties found.</td></tr>";
+                            echo "<tr><td colspan='7'>No properties found.</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -112,6 +116,9 @@ $result_properties = mysqli_query($conn, $sql_properties);
             </div>
         </section>
     </main>
+    <footer>
+        <p>&copy; 2025 House Rent for Bachelors. All rights reserved.</p>
+    </footer>
 </body>
 </html>
 

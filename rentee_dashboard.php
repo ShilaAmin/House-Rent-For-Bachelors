@@ -9,9 +9,51 @@ if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'Rentee') {
 
 require_once 'DBconnect.php'; // Include database connection
 
-// Fetch properties available for rent
+// Fetch properties based on search criteria or show all properties
+$where_clauses = [];
+$params = [];
+$types = "";
+
+// Check if location is provided
+if (!empty($_GET['location'])) {
+    $where_clauses[] = "location LIKE ?";
+    $params[] = "%" . $_GET['location'] . "%";
+    $types .= "s";
+}
+
+// Check if min price is provided
+if (!empty($_GET['min_price'])) {
+    $where_clauses[] = "price >= ?";
+    $params[] = $_GET['min_price'];
+    $types .= "d";
+}
+
+// Check if max price is provided
+if (!empty($_GET['max_price'])) {
+    $where_clauses[] = "price <= ?";
+    $params[] = $_GET['max_price'];
+    $types .= "d";
+}
+
+// Check if gender is provided
+if (!empty($_GET['gender'])) {
+    $where_clauses[] = "gender = ?";
+    $params[] = $_GET['gender'];
+    $types .= "s";
+}
+
+// Build the query
 $sql = "SELECT * FROM property WHERE remaining > 0";
-$result = mysqli_query($conn, $sql);
+if (!empty($where_clauses)) {
+    $sql .= " AND " . implode(" AND ", $where_clauses);
+}
+
+$stmt = $conn->prepare($sql);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
 
 // Handle booking
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
@@ -32,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
         $stmt_update->bind_param("i", $propertyID);
         $stmt_update->execute();
 
-        // Add booking record (optional: create a `bookings` table to track bookings)
         echo "<script>alert('Booking successful!');</script>";
     } else {
         echo "<script>alert('No slots available for this property.');</script>";
@@ -45,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="frontend/style.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="frontend/rentee_dashboard.css">
     <title>Rentee Dashboard</title>
 </head>
 <body>
@@ -61,9 +102,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
     </header>
 
     <main>
-        <section class="welcome">
-            <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h2>
-            <p>Browse available properties below:</p>
+        <section class="search">
+            <h3>Search Properties</h3>
+            <form method="GET" action="rentee_dashboard.php" class="search_form">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location">
+
+                <label for="min_price">Min Price:</label>
+                <input type="number" id="min_price" name="min_price" placeholder="Min price">
+
+                <label for="max_price">Max Price:</label>
+                <input type="number" id="max_price" name="max_price" placeholder="Max price">
+
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="">Any</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
+                <button type="submit" class="dropbtn1">Search</button>
+            </form>
         </section>
 
         <section class="properties">
@@ -93,9 +152,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_property'])) {
             </div>
         </section>
     </main>
-
-    <footer>
-        <p>&copy; 2025 House Rent for Bachelors. All rights reserved.</p>
-    </footer>
 </body>
 </html>

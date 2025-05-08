@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in and is an admin
-if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['account_type'] !== 'Admin') {
     header("Location: login.php"); // Redirect to login page if not logged in or not an admin
     exit();
 }

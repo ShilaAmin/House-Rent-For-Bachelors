@@ -55,7 +55,7 @@ $result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="frontend/style.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="frontend/renter_dashboard.css">
     <title>Renter Dashboard</title>
 </head>
 <body>
@@ -89,7 +89,7 @@ $result = $stmt->get_result();
                 <textarea id="description" name="description" required></textarea>
 
                 <label for="price">Price (৳):</label>
-                <input type="number" id="price" name="price" required>
+                <input type="number" id="price" name="price" step="0.01" required>
 
                 <label for="capacity">Capacity (Slots):</label>
                 <input type="number" id="capacity" name="capacity" required>
@@ -111,8 +111,9 @@ $result = $stmt->get_result();
                             <h3><?php echo htmlspecialchars($property['title']); ?></h3>
                             <p>Location: <?php echo htmlspecialchars($property['location']); ?></p>
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
-                            <p>Price: ৳<?php echo htmlspecialchars($property['price']); ?></p>
+                            <p>Price: ৳<?php echo htmlspecialchars($property['price'],2); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <a href="edit_property.php?propertyID=<?php echo $property['propertyID']; ?>" class="dropbtn1">Edit</a>
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>
@@ -122,8 +123,6 @@ $result = $stmt->get_result();
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 House Rent for Bachelors. All rights reserved.</p>
-    </footer>
+
 </body>
 </html>

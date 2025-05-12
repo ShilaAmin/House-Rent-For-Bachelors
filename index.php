@@ -159,7 +159,11 @@ if (isset($_GET['delete_property']) && isset($_SESSION['admin_logged_in'])) {
                         echo "<h3>" . htmlspecialchars($row['title']) . "</h3>";
                         echo "<p>Location: " . htmlspecialchars($row['location']) . "</p>";
                         echo "<p>Price: ৳" . htmlspecialchars($row['price']) . "</p>";
-                        echo "<a href='view_property.php?id=" . $row['propertyID'] . "'><button class='dropbtn1'>View Details</button></a>";
+                        // if (isset($_SESSION['user'])) {
+                        //     echo "<a href='view_property.php?id=" . $row['propertyID'] . "'><button class='dropbtn1'>View Details</button></a>";
+                        // } else {
+                        echo "<a href='login.php'><button class='dropbtn1'>View Details</button></a>";
+                        // }
                         echo "</div>";
                     }
                 } else {

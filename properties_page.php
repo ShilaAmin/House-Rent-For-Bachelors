@@ -23,7 +23,7 @@ $result = mysqli_query($conn, $sql);
             </div>
             <ul class="nav_links">
                 <li><a href="index.php"><button class="dropbtn1">Home</button></a></li>
-                <li><a href="logout.php"><button class="dropbtn1">Log Out</button></a></li>
+    
             </ul>
         </nav>
     </header>
@@ -41,7 +41,13 @@ $result = mysqli_query($conn, $sql);
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price']); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
-                            <a href="view_property.php?id=<?php echo $property['propertyID']; ?>" class="dropbtn1">View Details</a>
+                            <?php
+                            if (isset($_SESSION['user'])) {
+                                echo "<a href='view_property.php?id=" . $property['propertyID'] . "' class='dropbtn1'>View Details</a>";
+                            } else {
+                                echo "<a href='login.php' class='dropbtn1'>View Details</a>";
+                            }
+                            ?>
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>

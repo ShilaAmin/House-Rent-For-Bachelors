@@ -42,6 +42,22 @@ html, body {
     font-weight: 500;
 }
 
+/* Style for the registration prompt */
+.login_box p {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 10px;
+}
+
+.login_box p a {
+    color: blue;
+    text-decoration: underline;
+}
+
+.login_box p a:hover {
+    color: darkblue;
+}
+
 /* Login Form */
 .login_form {
     display: flex;

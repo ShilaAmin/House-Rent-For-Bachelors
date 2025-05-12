@@ -77,6 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     />
                     <input type="submit" value="Login" name="login" />
                 </form>
+                <p style="text-align: center; margin-top: 10px;">
+                    Don't have an account? <a href="register.php" style="color: blue; text-decoration: underline;">Register here</a>.
+                </p>
             </div>
         </section>
     </main>

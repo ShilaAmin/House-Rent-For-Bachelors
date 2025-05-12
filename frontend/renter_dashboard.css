@@ -93,11 +93,13 @@ main {
 .add_property label {
     display: block;
     margin-bottom: 5px;
+    margin-top: 15px; /* Add space above all labels */
     font-weight: bold;
     color: #555;
 }
 
 .add_property input,
+.add_property select,
 .add_property textarea {
     width: 100%;
     padding: 10px;
@@ -105,6 +107,23 @@ main {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
+}
+
+.add_property select {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.add_property select#gender {
+    margin-bottom: 40px; /* Add space below the Gender dropdown */
+}
+
+.add_property input:focus,
+.add_property select:focus,
+.add_property textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
 .add_property button {

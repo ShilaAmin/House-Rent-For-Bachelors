@@ -11,11 +11,13 @@ require_once 'DBconnect.php'; // Include database connection
 
 // Handle property addition
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_property'])) {
+    $propertyID = $_POST['propertyID'];
     $title = $_POST['title'];
     $location = $_POST['location'];
     $description = $_POST['description'];
     $price = $_POST['price'];
     $capacity = $_POST['capacity'];
+    $gender = $_POST['gender'];
     $remaining = $capacity; // Initially, remaining slots are equal to capacity
     $renterID = $_SESSION['user'];
 
@@ -26,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_property'])) {
 
     if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
         // Insert property into the database
-        $sql = "INSERT INTO property (photos, location, description, title, renterID, remaining, capacity, price) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO property (propertyID, photos, location, description, title, renterID, remaining, capacity, price, gender) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssiiid", $photo, $location, $description, $title, $renterID, $remaining, $capacity, $price);
+        $stmt->bind_param("sssssiidss", $propertyID, $photo, $location, $description, $title, $renterID, $remaining, $capacity, $price, $gender);
 
         if ($stmt->execute()) {
             echo "<script>alert('Property added successfully!');</script>";
@@ -79,6 +81,9 @@ $result = $stmt->get_result();
         <section class="add_property">
             <h3>Add New Property</h3>
             <form method="POST" action="renter_dashboard.php" enctype="multipart/form-data">
+                <label for="propertyID">Property ID:</label>
+                <input type="text" id="propertyID" name="propertyID" required>
+
                 <label for="title">Title:</label>
                 <input type="text" id="title" name="title" required>
 
@@ -93,6 +98,13 @@ $result = $stmt->get_result();
 
                 <label for="capacity">Capacity (Slots):</label>
                 <input type="number" id="capacity" name="capacity" required>
+
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
 
                 <label for="photo">Photo:</label>
                 <input type="file" id="photo" name="photo" accept="image/*" required>
@@ -113,6 +125,7 @@ $result = $stmt->get_result();
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price'],2); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <p>Gender: <?php echo htmlspecialchars($property['gender']); ?></p>
                             <a href="edit_property.php?propertyID=<?php echo $property['propertyID']; ?>" class="dropbtn1">Edit</a>
                         </div>
                     <?php endwhile; ?>

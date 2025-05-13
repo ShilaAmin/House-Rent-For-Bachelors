@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
             <select id="account_type" name="account_type" required>
                 <option value="rentee">Rentee</option>
                 <option value="renter">Renter</option>
-                <option value="admin">Admin</option>
+                
             </select>
             <br>
             <button type="submit" name="register">Register</button>

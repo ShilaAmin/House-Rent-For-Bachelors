@@ -48,10 +48,34 @@ header .dropbtn1 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
 header .dropbtn1:hover {
     background-color: #c0392b;
+}
+
+/* Profile Icon Styling */
+.profile-icon {
+    margin-left: auto; /* Push the icon to the right */
+}
+
+.profile-icon a {
+    text-decoration: none;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make the image circular */
+    border: 2px solid #3498db; /* Add a border around the image */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); /* Add a shadow effect */
 }
 
 /* Main Section */

@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             session_start();
             $_SESSION["user"] = $username;
             $_SESSION["account_type"] = $user["account_type"];
+            $_SESSION['user_picture'] = $user['picture']; // Assuming 'picture' is the column name in the database
 
             // Redirect based on account type
             if ($user["account_type"] == "Rentee") {

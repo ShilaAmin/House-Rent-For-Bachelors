@@ -14,6 +14,125 @@ $result_users = mysqli_query($conn, $sql_users);
 // Fetch all properties
 $sql_properties = "SELECT * FROM property";
 $result_properties = mysqli_query($conn, $sql_properties);
+
+// Handle property deletion
+if (isset($_GET['delete_property'])) {
+    $propertyID = $_GET['delete_property'];
+
+    $sql_delete_property = "DELETE FROM property WHERE propertyID = ?";
+    $stmt = $conn->prepare($sql_delete_property);
+    $stmt->bind_param("i", $propertyID);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Property deleted successfully.');</script>";
+    } else {
+        echo "<script>alert('Error deleting property: " . $conn->error . "');</script>";
+    }
+
+    $stmt->close();
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+// Handle user deletion
+if (isset($_GET['delete_user'])) {
+    $userID = $_GET['delete_user'];
+
+    $sql_delete_user = "DELETE FROM user WHERE userID = ?";
+    $stmt = $conn->prepare($sql_delete_user);
+    $stmt->bind_param("s", $userID);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('User deleted successfully.');</script>";
+    } else {
+        echo "<script>alert('Error deleting user: " . $conn->error . "');</script>";
+    }
+
+    $stmt->close();
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+// Handle property image editing
+if (isset($_GET['edit_image'])) {
+    $propertyID = $_GET['edit_image'];
+
+    // Fetch the current image for the property
+    $sql_image = "SELECT photos FROM property WHERE propertyID = ?";
+    $stmt = $conn->prepare($sql_image);
+    $stmt->bind_param("i", $propertyID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $currentImage = $row['photos'];
+    } else {
+        echo "<script>alert('Property not found.');</script>";
+        header("Location: admin_dashboard.php");
+        exit();
+    }
+    $stmt->close();
+
+    // Handle the form submission for updating the image
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_image'])) {
+        if (isset($_FILES['new_image']) && $_FILES['new_image']['error'] === UPLOAD_ERR_OK) {
+            $newImageName = $_FILES['new_image']['name'];
+            $targetDir = "uploads/";
+            $targetFile = $targetDir . basename($newImageName);
+
+            // Move the uploaded file to the uploads directory
+            if (move_uploaded_file($_FILES['new_image']['tmp_name'], $targetFile)) {
+                // Delete the old image file if it exists
+                if (!empty($currentImage) && file_exists($targetDir . $currentImage)) {
+                    unlink($targetDir . $currentImage);
+                }
+
+                // Update the database with the new image name
+                $sql_update_image = "UPDATE property SET photos = ? WHERE propertyID = ?";
+                $stmt_update = $conn->prepare($sql_update_image);
+                $stmt_update->bind_param("si", $newImageName, $propertyID);
+
+                if ($stmt_update->execute()) {
+                    echo "<script>alert('Image updated successfully.');</script>";
+                    header("Location: admin_dashboard.php");
+                    exit();
+                } else {
+                    echo "<script>alert('Error updating image: " . $conn->error . "');</script>";
+                }
+                $stmt_update->close();
+            } else {
+                echo "<script>alert('Error uploading the new image.');</script>";
+            }
+        } else {
+            echo "<script>alert('Please select a valid image file.');</script>";
+        }
+    }
+
+    // Handle the form submission for deleting the image
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_image'])) {
+        $targetDir = "uploads/";
+
+        // Delete the old image file if it exists
+        if (!empty($currentImage) && file_exists($targetDir . $currentImage)) {
+            unlink($targetDir . $currentImage);
+        }
+
+        // Update the database to remove the image reference
+        $sql_delete_image = "UPDATE property SET photos = NULL WHERE propertyID = ?";
+        $stmt_delete = $conn->prepare($sql_delete_image);
+        $stmt_delete->bind_param("i", $propertyID);
+
+        if ($stmt_delete->execute()) {
+            echo "<script>alert('Image deleted successfully.');</script>";
+            header("Location: admin_dashboard.php");
+            exit();
+        } else {
+            echo "<script>alert('Error deleting image: " . $conn->error . "');</script>";
+        }
+        $stmt_delete->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,8 +157,6 @@ $result_properties = mysqli_query($conn, $sql_properties);
     <main>
         <section class="admin_section">
             <div class="admin_box">
-            
-
                 <!-- Manage Users -->
                 <h2>Manage Users</h2>
                 <table class="admin_table">
@@ -69,7 +186,7 @@ $result_properties = mysqli_query($conn, $sql_properties);
                                 echo "<td>" . $row['location'] . "</td>";
                                 echo "<td>" . ($row['verified'] ? 'Yes' : 'No') . "</td>";
                                 echo "<td>" . $row['account_type'] . "</td>";
-                                echo "<td><a href='admin_delete_user.php?userID=" . $row['userID'] . "' onclick=\"return confirm('Are you sure you want to delete this user?');\">Delete</a></td>";
+                                echo "<td><a href='admin_dashboard.php?delete_user=" . $row['userID'] . "' onclick=\"return confirm('Are you sure you want to delete this user?');\">Delete</a></td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -104,7 +221,10 @@ $result_properties = mysqli_query($conn, $sql_properties);
                                 echo "<td>" . $row['price'] . "</td>";
                                 echo "<td>" . $row['remaining'] . "</td>";
                                 echo "<td>" . $row['capacity'] . "</td>";
-                                echo "<td><a href='admin_delete_property.php?propertyID=" . $row['propertyID'] . "' onclick=\"return confirm('Are you sure you want to delete this property?');\">Delete</a></td>";
+                                echo "<td>
+                                    <a href='admin_dashboard.php?delete_property=" . $row['propertyID'] . "' onclick=\"return confirm('Are you sure you want to delete this property?');\">Delete</a> |
+                                    <a href='admin_dashboard.php?edit_image=" . $row['propertyID'] . "'>Edit/Delete Image</a>
+                                </td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -113,12 +233,28 @@ $result_properties = mysqli_query($conn, $sql_properties);
                         ?>
                     </tbody>
                 </table>
+
+                <!-- Edit/Delete Property Image -->
+                <?php if (isset($_GET['edit_image'])): ?>
+                    <h2>Edit/Delete Image for Property ID: <?php echo htmlspecialchars($propertyID); ?></h2>
+                    <?php if (!empty($currentImage)): ?>
+                        <p>Current Image:</p>
+                        <img src="uploads/<?php echo htmlspecialchars($currentImage); ?>" alt="Current Property Image" width="200">
+                    <?php else: ?>
+                        <p>No image currently available for this property.</p>
+                    <?php endif; ?>
+                    <form action="admin_dashboard.php?edit_image=<?php echo htmlspecialchars($propertyID); ?>" method="POST" enctype="multipart/form-data">
+                        <label for="new_image">Select New Image:</label>
+                        <input type="file" id="new_image" name="new_image" accept="image/*">
+                        <br><br>
+                        <button type="submit" name="update_image">Update Image</button>
+                        <button type="submit" name="delete_image" onclick="return confirm('Are you sure you want to delete this image?');">Delete Image</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2025 House Rent for Bachelors. All rights reserved.</p>
-    </footer>
+    
 </body>
 </html>
 

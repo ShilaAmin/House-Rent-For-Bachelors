@@ -154,6 +154,16 @@ $bookings_result = $stmt_bookings->get_result();
             color: #a94442;
         }
     </style>
+    <script>
+        function toggleSearch() {
+            const searchForm = document.getElementById('searchForm');
+            if (searchForm.style.display === 'none' || searchForm.style.display === '') {
+                searchForm.style.display = 'block';
+            } else {
+                searchForm.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -162,6 +172,12 @@ $bookings_result = $stmt_bookings->get_result();
                 <h1>Rentee Dashboard</h1>
             </div>
             <ul class="nav_links">
+                <li class="profile-icon">
+                    <a href="profile.php">
+                        <img src="uploads/<?php echo isset($_SESSION['user_picture']) ? $_SESSION['user_picture'] : 'default-profile.png'; ?>" 
+                             alt="Profile Picture" class="profile-image">
+                    </a>
+                </li>
                 <li><a href="logout.php"><button class="dropbtn1">Log Out</button></a></li>
             </ul>
         </nav>
@@ -187,8 +203,8 @@ $bookings_result = $stmt_bookings->get_result();
         <?php endif; ?>
         
         <section class="search">
-            <h3>Search Properties</h3>
-            <form method="GET" action="rentee_dashboard.php" class="search_form">
+            <button class="search-toggle dropbtn1" onclick="toggleSearch()">Search</button>
+            <form method="GET" action="rentee_dashboard.php" class="search_form" id="searchForm" style="display: none;">
                 <label for="location">Location:</label>
                 <input type="text" id="location" name="location" placeholder="Enter location">
 
@@ -221,6 +237,7 @@ $bookings_result = $stmt_bookings->get_result();
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price']); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <p>Gender: <?php echo htmlspecialchars($property['gender']); ?></p>
                             <?php if ($property['remaining'] > 0): ?>
                                 <a href="checkout.php?propertyID=<?php echo $property['propertyID']; ?>" class="dropbtn1">Book Now</a>
                             <?php else: ?>

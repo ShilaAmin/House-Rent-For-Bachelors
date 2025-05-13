@@ -67,7 +67,13 @@ $result = $stmt->get_result();
                 <h1>Renter Dashboard</h1>
             </div>
             <ul class="nav_links">
-                <li><a href="renter_bookings.php"><button class="dropbtn1">Manage Bookings</button></a></li>
+                
+                <li class="profile-icon">
+                    <a href="profile.php">
+                        <img src="uploads/<?php echo isset($_SESSION['user_picture']) ? $_SESSION['user_picture'] : 'default-profile.png'; ?>" 
+                             alt="Profile Picture" class="profile-image">
+                    </a>
+                </li>
                 <li><a href="logout.php"><button class="dropbtn1">Log Out</button></a></li>
             </ul>
         </nav>

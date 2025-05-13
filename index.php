@@ -128,11 +128,13 @@ if (isset($_GET['delete_property']) && isset($_SESSION['admin_logged_in'])) {
                        <div class="dropdown-content">
                             <a href="register.php?type=rentee">Rentee</a>
                             <a href="register.php?type=renter">Renter</a>
-                            <a href="register.php?type=admin">Admin</a>
+                            
                       </div>
                   </div>
                 </li>
                 <li><a href="login.php"><button class="dropbtn1">Log in</button></a></li>
+                
+                </li>
             </ul>
         </nav>
     </header>

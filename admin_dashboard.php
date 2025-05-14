@@ -19,17 +19,25 @@ $result_properties = mysqli_query($conn, $sql_properties);
 if (isset($_GET['delete_property'])) {
     $propertyID = $_GET['delete_property'];
 
-    $sql_delete_property = "DELETE FROM property WHERE propertyID = ?";
-    $stmt = $conn->prepare($sql_delete_property);
-    $stmt->bind_param("i", $propertyID);
+    // Delete related rows in the `has` table
+    $sql_delete_has = "DELETE FROM has WHERE propertyID = ?";
+    $stmt_has = $conn->prepare($sql_delete_has);
+    $stmt_has->bind_param("i", $propertyID);
+    $stmt_has->execute();
+    $stmt_has->close();
 
-    if ($stmt->execute()) {
+    // Delete the property from the `property` table
+    $sql_delete_property = "DELETE FROM property WHERE propertyID = ?";
+    $stmt_property = $conn->prepare($sql_delete_property);
+    $stmt_property->bind_param("i", $propertyID);
+
+    if ($stmt_property->execute()) {
         echo "<script>alert('Property deleted successfully.');</script>";
     } else {
         echo "<script>alert('Error deleting property: " . $conn->error . "');</script>";
     }
 
-    $stmt->close();
+    $stmt_property->close();
     header("Location: admin_dashboard.php");
     exit();
 }

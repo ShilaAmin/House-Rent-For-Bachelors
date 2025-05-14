@@ -37,11 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_property'])) {
     $price = $_POST['price'];
     $capacity = $_POST['capacity'];
     $remaining = $_POST['remaining'];
+    $gender = $_POST['gender'];
 
     // Update property details in the database
-    $sql = "UPDATE property SET title = ?, location = ?, description = ?, price = ?, capacity = ?, remaining = ? WHERE propertyID = ? AND renterID = ?";
+    $sql = "UPDATE property SET title = ?, location = ?, description = ?, price = ?, capacity = ?, remaining = ?, gender = ? WHERE propertyID = ? AND renterID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssdiisi", $title, $location, $description, $price, $capacity, $remaining, $propertyID, $_SESSION['user']);
+    $stmt->bind_param("sssdiisis", $title, $location, $description, $price, $capacity, $remaining, $gender, $propertyID, $_SESSION['user']);
 
     if ($stmt->execute()) {
         echo "<script>alert('Property updated successfully!');</script>";
@@ -91,6 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_property'])) {
 
                 <label for="remaining">Remaining Slots:</label>
                 <input type="number" id="remaining" name="remaining" value="<?php echo htmlspecialchars($property['remaining']); ?>" required>
+
+                <label for="gender">Preferred Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="Any" <?php echo (isset($property['gender']) && $property['gender'] == 'Any') ? 'selected' : ''; ?>>Any</option>
+                    <option value="Male" <?php echo (isset($property['gender']) && $property['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+                    <option value="Female" <?php echo (isset($property['gender']) && $property['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
+                </select>
 
                 <button type="submit" name="update_property" class="dropbtn1">Update Property</button>
             </form>

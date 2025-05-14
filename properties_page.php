@@ -41,6 +41,7 @@ $result = mysqli_query($conn, $sql);
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price']); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <p>Gender Preference: <?php echo htmlspecialchars($property['gender'] ?? 'Any'); ?></p>
                             <a href="view_property.php?id=<?php echo $property['propertyID']; ?>" class="dropbtn1">View Details</a>
                         </div>
                     <?php endwhile; ?>

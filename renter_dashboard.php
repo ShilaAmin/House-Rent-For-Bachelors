@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_property'])) {
     $capacity = $_POST['capacity'];
     $remaining = $capacity; // Initially, remaining slots are equal to capacity
     $renterID = $_SESSION['user'];
+    $gender = $_POST['gender']; // Get gender preference
 
     // Handle file upload
     $photo = $_FILES['photo']['name'];
@@ -26,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_property'])) {
 
     if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
         // Insert property into the database
-        $sql = "INSERT INTO property (photos, location, description, title, renterID, remaining, capacity, price) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO property (photos, location, description, title, renterID, remaining, capacity, price, gender) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssiiid", $photo, $location, $description, $title, $renterID, $remaining, $capacity, $price);
+        $stmt->bind_param("ssssiiids", $photo, $location, $description, $title, $renterID, $remaining, $capacity, $price, $gender);
 
         if ($stmt->execute()) {
             echo "<script>alert('Property added successfully!');</script>";
@@ -95,6 +96,13 @@ $result = $stmt->get_result();
                 <label for="capacity">Capacity (Slots):</label>
                 <input type="number" id="capacity" name="capacity" required>
 
+                <label for="gender">Preferred Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="Any">Any</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
                 <label for="photo">Photo:</label>
                 <input type="file" id="photo" name="photo" accept="image/*" required>
 
@@ -114,6 +122,7 @@ $result = $stmt->get_result();
                             <p>Description: <?php echo htmlspecialchars($property['description']); ?></p>
                             <p>Price: ৳<?php echo htmlspecialchars($property['price'],2); ?></p>
                             <p>Slots: <?php echo htmlspecialchars($property['remaining']); ?> / <?php echo htmlspecialchars($property['capacity']); ?></p>
+                            <p>Gender Preference: <?php echo htmlspecialchars($property['gender'] ?? 'Any'); ?></p>
                             <a href="edit_property.php?propertyID=<?php echo $property['propertyID']; ?>" class="dropbtn1">Edit</a>
                         </div>
                     <?php endwhile; ?>

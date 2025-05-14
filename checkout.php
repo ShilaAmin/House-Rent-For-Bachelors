@@ -32,6 +32,21 @@ if ($result->num_rows === 0) {
 
 $property = $result->fetch_assoc();
 
+// Fetch rentee details to check gender
+$rentee_sql = "SELECT gender FROM user WHERE userID = ?";
+$stmt = $conn->prepare($rentee_sql);
+$stmt->bind_param("i", $userID);
+$stmt->execute();
+$rentee_result = $stmt->get_result();
+$rentee = $rentee_result->fetch_assoc();
+
+// Check if rentee's gender matches the property's gender preference
+if (isset($property['gender']) && $property['gender'] !== 'Any' && $property['gender'] !== $rentee['gender']) {
+    $_SESSION['error_message'] = "This property is only available for " . $property['gender'] . " rentees.";
+    header("Location: rentee_dashboard.php");
+    exit();
+}
+
 // Process payment form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get payment details
@@ -198,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p><strong>Location:</strong> <?php echo htmlspecialchars($property['location']); ?></p>
                 <p><strong>Price:</strong> ৳<?php echo htmlspecialchars($property['price']); ?></p>
                 <p><strong>Available Slots:</strong> <?php echo htmlspecialchars($property['remaining']); ?> of <?php echo htmlspecialchars($property['capacity']); ?></p>
+                <p><strong>Gender Preference:</strong> <?php echo htmlspecialchars($property['gender'] ?? 'Any'); ?></p>
             </div>
         </div>
         

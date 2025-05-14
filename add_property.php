@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $capacity = intval($_POST['capacity']);
     $remaining = intval($_POST['remaining']);
     $renterID = $_SESSION['user_id']; // who posted
+    $gender = mysqli_real_escape_string($conn, $_POST['gender']);
 
     // Handle image upload
     $photoName = $_FILES['photo']['name'];
@@ -25,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (move_uploaded_file($photoTmp, $photoFolder)) {
         // Insert into property table
-        $sql = "INSERT INTO property (photos, location, description, title, renterID, remaining, capacity, price) 
-                VALUES ('$photoName', '$location', '$description', '$title', '$renterID', '$remaining', '$capacity', '$price')";
+        $sql = "INSERT INTO property (photos, location, description, title, renterID, remaining, capacity, price, gender) 
+                VALUES ('$photoName', '$location', '$description', '$title', '$renterID', '$remaining', '$capacity', '$price', '$gender')";
         if (mysqli_query($conn, $sql)) {
             echo "Property Posted Successfully!";
         } else {
@@ -57,6 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <textarea name="description" placeholder="Description" required></textarea><br><br>
     <input type="number" name="capacity" placeholder="Capacity (Total)" required><br><br>
     <input type="number" name="remaining" placeholder="Remaining Spaces" required><br><br>
+    
+    <label>Preferred Gender:</label><br>
+    <select name="gender" required>
+        <option value="Any">Any</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select><br><br>
     
     <label>Upload Property Photo:</label><br>
     <input type="file" name="photo" accept="image/*" required><br><br>

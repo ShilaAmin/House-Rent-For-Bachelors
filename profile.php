@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
         <form action="profile.php" method="POST" enctype="multipart/form-data">
             <label for="userID">User ID:</label>
-            <input type="text" id="userID" name="userID" value="<?php echo htmlspecialchars($user['userID']); ?>" required>
+            <input type="text" id="userID" name="userID" value="<?php echo htmlspecialchars($user['userID']); ?>" readonly>
 
             <label for="phone_no">Phone Number:</label>
             <input type="text" id="phone_no" name="phone_no" value="<?php echo htmlspecialchars($user['phone_no']); ?>" required>

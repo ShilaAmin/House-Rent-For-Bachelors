@@ -71,67 +71,7 @@ if (isset($_GET['delete_property']) && isset($_SESSION['admin_logged_in'])) {
                 <h1><a href="index.php">House Rent for Bachelors</a></h1>
             </div>
             <ul class="nav_link">
-                <li>
-                    <style>
-                        .dropbtn {
-                            background-color: rgb(52, 82, 121);
-                            color: white;
-                            padding: 7px;
-                            font-family: "Fredoka", sans-serif;
-                            font-size: 1rem;
-                            border: none;
-                            cursor: pointer;
-                        }
-                        .dropbtn1 {
-                            background-color: rgb(52, 82, 121);
-                            color: white;
-                            padding: 7px;
-                            font-family: "Fredoka", sans-serif;
-                            font-size: 1rem;
-                            border: none;
-                            cursor: pointer;
-                        }
-                        .dropdown {
-                            position: relative;
-                            display: inline-block;
-                        }
-                        .dropdown-content {
-                            display: none;
-                            position: absolute;
-                            min-width: 140px;
-                            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                            z-index: 1;
-                        }
-                        .dropdown-content a {
-                            color: black;
-                            padding: 12px 16px;
-                            text-decoration: none;
-                            display: block;
-                        }
-                        .dropdown-content a:hover {
-                            background-color: rgb(198, 220, 224);
-                        }
-                        .dropdown:hover .dropdown-content {
-                            display: block;
-                            background-color: rgb(172, 214, 214);
-                        }
-                        .dropdown:hover .dropbtn {
-                            background-color: rgb(62, 134, 142);
-                        }
-                        .dropbtn1:hover {
-                            background-color: rgb(62, 134, 142);
-                        }
-                    </style>
-
-                   <div class="dropdown">
-                       <button class="dropbtn">Register</button>
-                       <div class="dropdown-content">
-                            <a href="register.php?type=rentee">Rentee</a>
-                            <a href="register.php?type=renter">Renter</a>
-                            
-                      </div>
-                  </div>
-                </li>
+                <li><a href="register.php"><button class="dropbtn1">Register</button></a></li>
                 <li><a href="login.php"><button class="dropbtn1">Log in</button></a></li>
                 
                 </li>

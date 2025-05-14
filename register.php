@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     <div class="form-container">
         <h2>Register</h2>
         <form action="register.php" method="POST" enctype="multipart/form-data">
-            <label for="userID">User ID: (give a unique username)</label>
+            <label for="userID">User ID: </label>
             <input type="text" id="userID" name="userID" required>
             <br>
             <label for="phone_no">Phone Number:</label>

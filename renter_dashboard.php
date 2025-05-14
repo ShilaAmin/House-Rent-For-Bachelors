@@ -74,6 +74,7 @@ $result = $stmt->get_result();
                              alt="Profile Picture" class="profile-image">
                     </a>
                 </li>
+                <li><a href="renter_bookings.php"><button class="dropbtn1">Manage Bookings</button></a></li>
                 <li><a href="logout.php"><button class="dropbtn1">Log Out</button></a></li>
             </ul>
         </nav>

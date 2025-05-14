@@ -65,6 +65,7 @@ $result = $stmt->get_result();
                 <h1>Renter Dashboard</h1>
             </div>
             <ul class="nav_links">
+                <li><a href="renter_bookings.php"><button class="dropbtn1">Manage Bookings</button></a></li>
                 <li><a href="logout.php"><button class="dropbtn1">Log Out</button></a></li>
             </ul>
         </nav>
